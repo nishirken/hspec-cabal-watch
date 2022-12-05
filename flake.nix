@@ -1,4 +1,9 @@
 {
+  nixConfig = {
+    extra-substituters = "https://cache.iog.io";
+    extra-trusted-public-keys = "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=";
+  };
+
   inputs = {
     haskellNix.url = "github:input-output-hk/haskell.nix";
     nixpkgs.follows = "haskellNix/nixpkgs-unstable";
@@ -6,7 +11,7 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, haskellNix }:
-    flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ] (system:
+    flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
     let
       packageName = "hspec-cabal-watch";
       execName = "hcw";
@@ -17,13 +22,13 @@
           ${packageName} =
             final.haskell-nix.cabalProject' {
               src = ./.;
-              compiler-nix-name = "ghc8107";
+              compiler-nix-name = "ghc925";
               shell = {
                 tools = {
-                  cabal = "3.6.2.0";
+                  cabal = "3.8.1.0";
                   hlint = "latest";
                   haskell-language-server = "latest";
-                  ormolu = "0.1.4.1";
+                  ormolu = "0.5.0.1";
                 };
                 buildInputs = [pkgs.haskellPackages.implicit-hie pkgs.entr];
                 withHoogle = true;
